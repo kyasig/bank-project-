@@ -7,10 +7,9 @@ using namespace std;
 int main()
 {
 	vector<subAccount*> s;
-	//subvec.push_back(new checking((Account());
+	s.push_back(new subAccount());
 	s.push_back(new checkingAccount());
-	subAccount cum;
-	//cum.menu();
     s.at(0)->menu();
+	s.at(1)->menu();
 	return 0;
 }
