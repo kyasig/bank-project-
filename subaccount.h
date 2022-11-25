@@ -12,11 +12,13 @@ class subAccount{
     public:
         virtual void deposit(int amount){this->balance += amount;};
         virtual void withdraw(int amount){this->balance -= amount;};
-        string getNum(){return this->num;}
+        string getNum(){return this->num;} //idk why this is here
         void printBalance(){cout << "current balance is " <<  this->balance << endl;}
         void genericMenu(char input);
         virtual void menu();
-        subAccount();
+        unsigned int getBalance(){return this->balance;}
+        subAccount(){this->num = "SAV" + to_string(uniqueNumSav++); this->balance = 0;}
+        subAccount(unsigned int bal);
 };
 class checkingAccount : public subAccount{
     private:
@@ -29,7 +31,13 @@ class checkingAccount : public subAccount{
         void toggleLock();
         void menu()override;
         void printt(){cout << "cum"<<endl;}
-        checkingAccount();
+        checkingAccount(){
+            this->num = "CHK" + to_string(uniqueNumChek++);
+            this->balance = 0;
+            this->locked = false;
+            this->maxCapacity = 0;
+        }
+        checkingAccount(unsigned int bal, int initMax, string initState);
 };
 
 int validInput(string input){
@@ -43,6 +51,12 @@ int validInput(string input){
         }
     }
 }
+
+/// subaccount stuff/////////////////////////////////////////////////////////////////////////////////////////////////
+subAccount :: subAccount(unsigned int bal){
+    this->num = "SAV" + to_string(uniqueNumSav++);
+    this->balance = bal;
+    }
 void subAccount::genericMenu(char input){
      if(tolower(input) == 'd'){
         cout << "enter deposit amount ";
@@ -55,16 +69,12 @@ void subAccount::genericMenu(char input){
          this ->withdraw(validInput(input));
     }
     else{cout << "enter one of the options bruh" << endl;}
-    this->printBalance();
+        this->printBalance();
 }
-/// @subaccount functions /////////////////////////////////////////////////////////////////////////////////////////////////////////
-subAccount :: subAccount(){
-    this->num = "SAV" + to_string(uniqueNumSav++);
-}
-
 void subAccount :: menu(){
     while (true){
-        cout <<"eligable services for " << this->getNum() << endl << "--D Deposit" << endl << "--W withdraw" << endl << "--X exit";
+        cout <<"eligable services for " << this->getNum() << endl << "--D Deposit" << endl  << "--W withdraw" << endl << "--X exit";
+
         cout <<"enter response: ";
         char input;
         cin >> input;
@@ -76,12 +86,12 @@ void subAccount :: menu(){
     }
 }
 /////////////////////checking account functions//////////////////////////////////////////////////////////////////////
-checkingAccount :: checkingAccount(){
-    this->num = "CHK" + to_string(uniqueNumChek++);
-    this->balance = 100;
-    this->locked = false;
-    this->maxCapacity = 10;
-}
+checkingAccount :: checkingAccount(unsigned int bal, int initMax, string initState){
+        this->num = "CHK" + to_string(uniqueNumChek++);
+        this->balance = bal;
+        this->maxCapacity = initMax;
+        initState = "locked"? this->locked = true : this->locked = false;
+        }
 void checkingAccount::withdraw(int amount ){
     if(this->locked){cout << "account is locked" << endl; return;}
     if(amount > this->maxCapacity){
@@ -94,8 +104,6 @@ void checkingAccount :: deposit(int amount ){
     if(this->locked){cout << "account is locked" << endl; return;}
     subAccount :: deposit(amount);
 }
-
-
 void checkingAccount::toggleLock(){
     string lockStatus;
     this->locked = !this->locked;
@@ -104,8 +112,8 @@ void checkingAccount::toggleLock(){
 }
 void checkingAccount :: menu(){
     while(true){
-        cout <<"eligable services for " << this->getNum() << endl << "--D Deposit" << endl << "--W withdraw" << endl
-    << "--C max capacity" << endl << "--T toggle account lock status" << endl << "--X exit";
+        cout <<"eligable services for " << this->getNum() << endl<< "--D Deposit" << endl << "--W withdraw" << endl << "--C max capacity"
+         << endl << "--T toggle account lock status" << endl << "--X exit"; 
         cout << endl <<"enter response ";
         char input;
         cin >> input; 

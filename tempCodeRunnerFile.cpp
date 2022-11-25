@@ -1,2 +1,1 @@
-
-	vector<subAccount*> s;
+cum

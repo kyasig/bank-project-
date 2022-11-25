@@ -1,15 +1,18 @@
 
 #include <iostream>
 #include "bank.h"
-#include "subaccount.h"
+#include "account.h"
 #include <vector>
-using namespace std;
-int main()
-{
-	vector<subAccount*> s;
-	s.push_back(new subAccount());
-	s.push_back(new checkingAccount());
-    s.at(0)->menu();
-	s.at(1)->menu();
+
+int main(){
+    bankAccount cum;
+	cum.openCheckingSubAcc(5,5,"locked");
+	cum.openSavingSubAcc(5);
+	cum.printt();
+	cout << endl;
+	cum.deleteSubAcc();
+	cum.printt();
+	//cum.subAccs.at(0)->printBalance();
+
 	return 0;
 }
