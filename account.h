@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 //using namespace std;
+static int uniqueNumm = 1000;
 class bankAccount{
     private:
         string uniqueNum;
@@ -24,11 +25,12 @@ class bankAccount{
        // void briefDisplay();
         void menu();
         void getSize(){std::cout << this->subAccs.size();}
-        void printt(){
-            for(auto i : this->subAccs){
-                cout << i->getNum() << " ";
-            }
+        bankAccount(){
+            this-> uniqueNum = "";
+            //this-> name = {};
+            this-> ssn = 0;
         }
+        bankAccount(string firstName, string lastName, int ssn);
 };
 
 ////helpers //////////////////////////////////////////////////////////////////////////
@@ -39,18 +41,61 @@ bool balanceComp(subAccount *s, subAccount *s2){
 
 subAccount* searchSubAcc(string num, vector<subAccount*> vec){
     for (auto i : vec){
-        if(i->getNum().compare(num) == 0){
+        if(i->getNum() == num){
             return i;
         }
     }
     return nullptr;
 }
 ///////////////////////////////////////////////////////////////////////////
+bankAccount :: bankAccount(string firstName, string lastName, int ssn){
+    this->name[0] = firstName;
+    this->name[1] = lastName;
+    this->ssn = ssn;
+    this->uniqueNum = "BNK" + to_string(uniqueNumm++);
+}
 void bankAccount :: deleteSubAcc(){
     auto bruh = this->subAccs.front();
     delete bruh;
     this->subAccs.erase(this->subAccs.begin(), this->subAccs.begin()+1);
 }
 
+void bankAccount :: modifySubAcc(string num){
+    searchSubAcc(num, this->subAccs)->menu();
+}
+
+void bankAccount :: menu(){
+    while (true){
+        cout << "options for " <<this->uniqueNum << "\nS -- open saving acc\nC -- open checking acc\nM -- modify subAcc\nC -- close a sub account\nD -- detail info\nB -- brief info\nX -- exit";
+        //lol
+        cout << endl <<"enter response: ";
+        char input;
+        cin >> input; 
+        if(tolower(input) == 'x'){
+             return; 
+        }
+        else if(tolower(input) == 's'){
+            cout << "enter initial balance: ";
+            string bal;
+            this->subAccs.push_back(new subAccount(validInput(bal)));
+        }
+        else if(tolower(input) == 'c'){
+            cout << "enter initial balance: ";
+            string bal; int vbal = validInput(bal);
+            cout << "enter initial max: ";
+            string max; int vmax = validInput(max);
+            cout << "enter initial balanc, max, and state: ";
+            string state; cin >> state;
+            this->subAccs.push_back(new checkingAccount(vbal,vmax,state));
+        }
+        else if(tolower(input) == 'm'){
+            cout << "enter name of account";
+            string acc;
+            cin >> acc;
+            this->modifySubAcc(acc);
+        }
+        
+    }
+}
 
 #endif

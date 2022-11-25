@@ -37,7 +37,7 @@ class checkingAccount : public subAccount{
             this->locked = false;
             this->maxCapacity = 0;
         }
-        checkingAccount(unsigned int bal, int initMax, string initState);
+        checkingAccount(int bal, int initMax, string initState);
 };
 
 int validInput(string input){
@@ -86,7 +86,7 @@ void subAccount :: menu(){
     }
 }
 /////////////////////checking account functions//////////////////////////////////////////////////////////////////////
-checkingAccount :: checkingAccount(unsigned int bal, int initMax, string initState){
+checkingAccount :: checkingAccount(int bal, int initMax, string initState){
         this->num = "CHK" + to_string(uniqueNumChek++);
         this->balance = bal;
         this->maxCapacity = initMax;
