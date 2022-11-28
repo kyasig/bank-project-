@@ -10,7 +10,7 @@ class bankAccount{
         string uniqueNum;
         string name[2];
         int ssn;
-       // vector <subAccount *> subAccs;
+        //vector <subAccount *> subAccs;
     public:
         vector <subAccount *> subAccs;
         void openSavingSubAcc(unsigned int initBal){
@@ -19,10 +19,10 @@ class bankAccount{
         void openCheckingSubAcc(unsigned int bal, int initMax, string initState){
             this->subAccs.push_back(new checkingAccount());
             }
-        void deleteSubAcc();
+        void deleteSubAcc(string id);
         void modifySubAcc(string num);
-       // void detailDisplay();
-       // void briefDisplay();
+        void detailDisplay();
+        int getSubs(){return this->subAccs.size();}
         void menu();
         void getSize(){std::cout << this->subAccs.size();}
         bankAccount(){
@@ -35,17 +35,28 @@ class bankAccount{
 
 ////helpers //////////////////////////////////////////////////////////////////////////
 
-bool balanceComp(subAccount *s, subAccount *s2){
-    return s->getBalance()  > s2->getBalance();
-}
-
-subAccount* searchSubAcc(string num, vector<subAccount*> vec){
-    for (auto i : vec){
-        if(i->getNum() == num){
+int searchSubAcc(string num, vector<subAccount*> vec){ //returns the index of desired subaccount
+    for (int i = 0; i < vec.size(); i++){
+        if(vec.at(i)->getNum() == num){
             return i;
         }
     }
-    return nullptr;
+    return -1;
+}
+
+void bankSorter(vector <subAccount *> &vec){ //chose insertion sort due to low expected amount of data
+    int i = 0;
+    int j = 0;
+    subAccount *temp;
+    for(i = 1; i < vec.size(); i++){
+        j = i;
+        while(j > 0 && vec.at(j)->getBalance() < vec.at(j-1)->getBalance()){
+            temp = vec.at(j);
+            vec.at(j) = vec.at(j-1);
+            vec.at(j-1) = temp;
+            j--;
+        }
+    }
 }
 ///////////////////////////////////////////////////////////////////////////
 bankAccount :: bankAccount(string firstName, string lastName, int ssn){
@@ -54,19 +65,32 @@ bankAccount :: bankAccount(string firstName, string lastName, int ssn){
     this->ssn = ssn;
     this->uniqueNum = "BNK" + to_string(uniqueNumm++);
 }
-void bankAccount :: deleteSubAcc(){
-    auto bruh = this->subAccs.front();
-    delete bruh;
-    this->subAccs.erase(this->subAccs.begin(), this->subAccs.begin()+1);
+void bankAccount :: deleteSubAcc(string id){
+    int i = searchSubAcc(id, this->subAccs);
+    auto itr = this->subAccs.begin() + i;
+    if(i != -1){
+        delete this->subAccs.at(i);
+        this->subAccs.erase(itr);
+    }else{
+        cout << "subacc dont exist";
+    }
 }
 
 void bankAccount :: modifySubAcc(string num){
-    searchSubAcc(num, this->subAccs)->menu();
+    this->subAccs.at(searchSubAcc(num, this->subAccs))->menu();
 }
 
+void bankAccount :: detailDisplay(){
+    bankSorter(this->subAccs);
+    for(auto i : this->subAccs){
+        cout << i->getNum() << " -- " << i->getBalance();
+        cout << endl;
+    }
+} 
+    
 void bankAccount :: menu(){
     while (true){
-        cout << "options for " <<this->uniqueNum << "\nS -- open saving acc\nC -- open checking acc\nM -- modify subAcc\nC -- close a sub account\nD -- detail info\nB -- brief info\nX -- exit";
+        cout << "options for " <<this->uniqueNum << "\nS -- open saving acc\nC -- open checking acc\nM -- modify subAcc\nE -- close a sub account\nD -- detail info\nB -- brief info\nX -- exit";
         //lol
         cout << endl <<"enter response: ";
         char input;
@@ -84,7 +108,7 @@ void bankAccount :: menu(){
             string bal; int vbal = validInput(bal);
             cout << "enter initial max: ";
             string max; int vmax = validInput(max);
-            cout << "enter initial balanc, max, and state: ";
+            cout << "enter \"l\" if you want locked account: ";
             string state; cin >> state;
             this->subAccs.push_back(new checkingAccount(vbal,vmax,state));
         }
@@ -94,7 +118,23 @@ void bankAccount :: menu(){
             cin >> acc;
             this->modifySubAcc(acc);
         }
-        
+        else if(tolower(input) == 'e'){
+            cout << "enter name of account";
+            string acc;
+            cin >> acc; 
+            this->deleteSubAcc(acc);
+        }
+        else if(tolower(input) == 'd'){
+            this->detailDisplay();
+        }
+        else if(tolower(input) == 'b'){
+            int sum =0;
+            for(auto i : this->subAccs){sum +=i->getBalance();}
+            cout <<"aggregated balance of " << this->uniqueNum << "with " <<this->subAccs.size() <<" subaccounts is " << sum << endl;
+        }
+        else{
+            cout <<"enter one of the options";
+        }
     }
 }
 

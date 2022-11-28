@@ -46,7 +46,7 @@ int validInput(string input){
         try{
             return stoi(input);
         }catch(invalid_argument){
-            cout <<"enter a damn integer: ";
+            cout <<"enter an integer: ";
             cin >> input;
         }
     }
@@ -90,7 +90,7 @@ checkingAccount :: checkingAccount(int bal, int initMax, string initState){
         this->num = "CHK" + to_string(uniqueNumChek++);
         this->balance = bal;
         this->maxCapacity = initMax;
-        initState = "locked"? this->locked = true : this->locked = false;
+        initState = "l"? this->locked = true : this->locked = false;
         }
 void checkingAccount::withdraw(int amount ){
     if(this->locked){cout << "account is locked" << endl; return;}
