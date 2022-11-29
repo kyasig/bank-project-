@@ -5,9 +5,17 @@
 #include <vector>
 
 int main(){
-    bankAccount cum("walter", "white", 1342324324);
-    
-	cum.menu();
+    cout <<"enter name of bank ";
+	string bankname; cin >> bankname;
+	cout << "enter address ";
+	string addy; cin >> addy;
+	cout <<"enter opening time ";
+	string open; int intopen = validInput(open);
+	cout <<"enter closing time ";
+	string close; int intclose = validInput(close);
 
-	return 0;
+	bank b(bankname, addy, intopen, intclose);
+	b.menu();
+
+    return 0;
 }

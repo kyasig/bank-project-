@@ -24,7 +24,15 @@ class bankAccount{
         void detailDisplay();
         int getSubs(){return this->subAccs.size();}
         void menu();
+        string getNum(){return this->uniqueNum;}
         void getSize(){std::cout << this->subAccs.size();}
+        int getBalance(){
+            int sum = 0;
+            for(auto i : subAccs){
+                sum += i->getBalance();
+            }
+            return sum;
+        }
         bankAccount(){
             this-> uniqueNum = "";
             //this-> name = {};
@@ -34,8 +42,8 @@ class bankAccount{
 };
 
 ////helpers //////////////////////////////////////////////////////////////////////////
-
-int searchSubAcc(string num, vector<subAccount*> vec){ //returns the index of desired subaccount
+template <typename t>
+int searchAcc(string num, vector<t*> vec){ //returns the index of desired subaccount
     for (int i = 0; i < vec.size(); i++){
         if(vec.at(i)->getNum() == num){
             return i;
@@ -43,11 +51,11 @@ int searchSubAcc(string num, vector<subAccount*> vec){ //returns the index of de
     }
     return -1;
 }
-
-void bankSorter(vector <subAccount *> &vec){ //chose insertion sort due to low expected amount of data
+template <typename t>
+void bankSorter(vector <t *> &vec){ //chose insertion sort due to low expected amount of data
     int i = 0;
     int j = 0;
-    subAccount *temp;
+    t *temp;
     for(i = 1; i < vec.size(); i++){
         j = i;
         while(j > 0 && vec.at(j)->getBalance() < vec.at(j-1)->getBalance()){
@@ -58,6 +66,7 @@ void bankSorter(vector <subAccount *> &vec){ //chose insertion sort due to low e
         }
     }
 }
+
 ///////////////////////////////////////////////////////////////////////////
 bankAccount :: bankAccount(string firstName, string lastName, int ssn){
     this->name[0] = firstName;
@@ -66,7 +75,7 @@ bankAccount :: bankAccount(string firstName, string lastName, int ssn){
     this->uniqueNum = "BNK" + to_string(uniqueNumm++);
 }
 void bankAccount :: deleteSubAcc(string id){
-    int i = searchSubAcc(id, this->subAccs);
+    int i = searchAcc(id, this->subAccs);
     auto itr = this->subAccs.begin() + i;
     if(i != -1){
         delete this->subAccs.at(i);
@@ -77,7 +86,7 @@ void bankAccount :: deleteSubAcc(string id){
 }
 
 void bankAccount :: modifySubAcc(string num){
-    this->subAccs.at(searchSubAcc(num, this->subAccs))->menu();
+    this->subAccs.at(searchAcc(num, this->subAccs))->menu();
 }
 
 void bankAccount :: detailDisplay(){
@@ -101,7 +110,13 @@ void bankAccount :: menu(){
         else if(tolower(input) == 's'){
             cout << "enter initial balance: ";
             string bal;
-            this->subAccs.push_back(new subAccount(validInput(bal)));
+            subAccount* newAcc = new subAccount(validInput(bal));
+            int sum = 0;
+            for(auto x : this->subAccs){
+                if(x->getNum()[0] == 'S'){sum +=1;}
+            }
+            if (sum == 0){newAcc->deposit(100);}
+            this->subAccs.push_back(newAcc);
         }
         else if(tolower(input) == 'c'){
             cout << "enter initial balance: ";
