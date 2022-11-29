@@ -1,8 +1,6 @@
 
 #include <iostream>
 #include "bank.h"
-#include "account.h"
-#include <vector>
 
 int main(){
     cout <<"enter name of bank ";
@@ -16,6 +14,7 @@ int main(){
 
 	bank b(bankname, addy, intopen, intclose);
 	b.menu();
-
+    
+	cout << "testing thing";
     return 0;
 }

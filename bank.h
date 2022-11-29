@@ -10,7 +10,7 @@ class bank {
         vector <bankAccount *> accs;
     public:
         int getSubAccs();
-        int getSavingSubAccs(); // used for the $100 initial balance
+        int getSavingSubAccs(); 
         int getCheckingSubAccs();
         void displayAccs();
         void modifyAcc(string id);

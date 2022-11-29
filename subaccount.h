@@ -58,30 +58,38 @@ subAccount :: subAccount(unsigned int bal){
     this->balance = bal;
     }
 void subAccount::genericMenu(char input){
-     if(tolower(input) == 'd'){
-        cout << "enter deposit amount ";
-        string input;
-        this->deposit(validInput(input));
-      }
-      else if(tolower(input) == 'w'){
-         cout <<"how much do you wanna withdraw ";
-         string input;
-         this ->withdraw(validInput(input));
+    switch(tolower(input)){
+        case 'd':{
+            cout << "enter deposit amount ";
+            string input;
+            this->deposit(validInput(input));
+            break;
+        }
+        case 'w':{
+            cout <<"how much do you wanna withdraw ";
+            string input;
+            this ->withdraw(validInput(input));  
+            break;        
+        }default:{
+            cout <<" enter one of the options bruh";
+        }
     }
-    else{cout << "enter one of the options bruh" << endl;}
-        this->printBalance();
+
 }
+
 void subAccount :: menu(){
     while (true){
-        cout <<"eligable services for " << this->getNum() << endl << "--D Deposit" << endl  << "--W withdraw" << endl << "--X exit";
-
+        cout <<"eligable services for " << this->getNum() <<"\n--D Deposit\n--W withdraw\n--X exit";
         cout <<"enter response: ";
         char input;
         cin >> input;
-        if(tolower(input) == 'x'){
-            return;
-        }else{
-         genericMenu(input);
+        switch(tolower(input)){
+            case 'x':{
+                return;
+            }
+            default: {
+                genericMenu(input);
+            }
         }
     }
 }
@@ -112,24 +120,28 @@ void checkingAccount::toggleLock(){
 }
 void checkingAccount :: menu(){
     while(true){
-        cout <<"eligable services for " << this->getNum() << endl<< "--D Deposit" << endl << "--W withdraw" << endl << "--C max capacity"
-         << endl << "--T toggle account lock status" << endl << "--X exit"; 
+        cout <<"eligable services for " << this->getNum() << "\n--D Deposit\n--W withdraw\n--C max capacity\n";
+        cout <<"\n--T toggle account lock status\n--X exit"; 
         cout << endl <<"enter response ";
         char input;
         cin >> input; 
-        if(input == 'x'){
-        return;
-        }
-        else if(tolower(input) == 'c'){
-            cout << "enter max ";
-            string inp;
-            setMax(validInput(inp));
-        }
-        else if(tolower(input) == 't'){
-            toggleLock();
-        }
-        else{
-            subAccount::genericMenu(input);
+        switch(tolower(input)){
+            case 'x':{
+                return;
+            }
+            case 'c':{
+                cout << "enter max ";
+                string inp;
+                setMax(validInput(inp));
+                break;
+            }
+            case 't':{
+                this->toggleLock();
+                break;
+            }
+            default:{
+                subAccount::genericMenu(input);
+            }
         }
     }
 }

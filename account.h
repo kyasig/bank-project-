@@ -104,51 +104,53 @@ void bankAccount :: menu(){
         cout << endl <<"enter response: ";
         char input;
         cin >> input; 
-        if(tolower(input) == 'x'){
-             return; 
-        }
-        else if(tolower(input) == 's'){
-            cout << "enter initial balance: ";
-            string bal;
-            subAccount* newAcc = new subAccount(validInput(bal));
-            int sum = 0;
-            for(auto x : this->subAccs){
-                if(x->getNum()[0] == 'S'){sum +=1;}
+        switch(tolower(input)){
+            case 'x':{
+                return;
             }
-            if (sum == 0){newAcc->deposit(100);}
-            this->subAccs.push_back(newAcc);
-        }
-        else if(tolower(input) == 'c'){
-            cout << "enter initial balance: ";
-            string bal; int vbal = validInput(bal);
-            cout << "enter initial max: ";
-            string max; int vmax = validInput(max);
-            cout << "enter \"l\" if you want locked account: ";
-            string state; cin >> state;
-            this->subAccs.push_back(new checkingAccount(vbal,vmax,state));
-        }
-        else if(tolower(input) == 'm'){
-            cout << "enter name of account";
-            string acc;
-            cin >> acc;
-            this->modifySubAcc(acc);
-        }
-        else if(tolower(input) == 'e'){
-            cout << "enter name of account";
-            string acc;
-            cin >> acc; 
-            this->deleteSubAcc(acc);
-        }
-        else if(tolower(input) == 'd'){
-            this->detailDisplay();
-        }
-        else if(tolower(input) == 'b'){
-            int sum =0;
-            for(auto i : this->subAccs){sum +=i->getBalance();}
-            cout <<"aggregated balance of " << this->uniqueNum << "with " <<this->subAccs.size() <<" subaccounts is " << sum << endl;
-        }
-        else{
-            cout <<"enter one of the options";
+            case 's':{
+                cout << "enter initial balance: ";
+                string bal;
+                subAccount* newAcc = new subAccount(validInput(bal));
+                int sum = 0;;
+                for(auto x : this->subAccs){
+                  if(x->getNum()[0] == 'S'){sum +=1;}
+                }
+                if (sum == 0){newAcc->deposit(100);}
+                this->subAccs.push_back(newAcc); break;
+            }
+            case'c':{
+                cout << "enter initial balance: ";
+                string bal; int vbal = validInput(bal);
+                cout << "enter initial max: ";
+                string max; int vmax = validInput(max);
+                cout << "enter \"l\" if you want locked account: ";
+                string state; cin >> state;
+                this->subAccs.push_back(new checkingAccount(vbal,vmax,state)); break;
+            }
+            case 'm':{
+                cout << "enter name of account";
+                string acc;
+                cin >> acc;
+                this->modifySubAcc(acc); break;
+            }
+            case 'e':{
+                cout << "enter name of account";
+                string acc;
+                cin >> acc; 
+                this->deleteSubAcc(acc);
+            }   
+            case 'd':{
+                this->detailDisplay();
+            }
+            case 'b':{
+                int sum =0;
+                for(auto i : this->subAccs){sum +=i->getBalance();}
+                cout <<"aggregated balance of " << this->uniqueNum << "with " <<this->subAccs.size() <<" subaccounts is " << sum << endl;
+            }
+            default:{
+                cout <<"enter one of the options bruh";
+            }
         }
     }
 }
