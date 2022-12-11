@@ -2,7 +2,6 @@
 #define account_H
 #include "subaccount.h"
 #include <vector>
-#include <algorithm>
 //using namespace std;
 static int uniqueNumm = 1000;
 class bankAccount{
@@ -25,6 +24,8 @@ class bankAccount{
         int getSubs(){return this->subAccs.size();}
         void menu();
         string getNum(){return this->uniqueNum;}
+        string getName(){return this->name[0] + " " + this->name[1];}
+        int getSSn(){return this->ssn;}
         void getSize(){std::cout << this->subAccs.size();}
         int getBalance(){
             int sum = 0;
@@ -92,14 +93,14 @@ void bankAccount :: modifySubAcc(string num){
 void bankAccount :: detailDisplay(){
     bankSorter(this->subAccs);
     for(auto i : this->subAccs){
-        cout << i->getNum() << " -- " << i->getBalance();
-        cout << endl;
+        i->printInfo();
     }
+    cout << endl;
 } 
     
 void bankAccount :: menu(){
     while (true){
-        cout << "options for " <<this->uniqueNum << "\nS -- open saving acc\nC -- open checking acc\nM -- modify subAcc\nE -- close a sub account\nD -- detail info\nB -- brief info\nX -- exit";
+        cout << "\noptions for " <<this->uniqueNum << "\nS -- open saving acc\nC -- open checking acc\nM -- modify subAcc\nE -- close a sub account\nD -- detail info\nB -- brief info\nX -- exit";
         //lol
         cout << endl <<"enter response: ";
         char input;
@@ -117,7 +118,8 @@ void bankAccount :: menu(){
                   if(x->getNum()[0] == 'S'){sum +=1;}
                 }
                 if (sum == 0){newAcc->deposit(100);}
-                this->subAccs.push_back(newAcc); break;
+                this->subAccs.push_back(newAcc); 
+                cout <<"\na new saving subAccount " << this->subAccs.back()->getNum() <<" was created!\n"; break;
             }
             case'c':{
                 cout << "enter initial balance: ";
@@ -126,30 +128,34 @@ void bankAccount :: menu(){
                 string max; int vmax = validInput(max);
                 cout << "enter \"l\" if you want locked account: ";
                 string state; cin >> state;
-                this->subAccs.push_back(new checkingAccount(vbal,vmax,state)); break;
+                this->subAccs.push_back(new checkingAccount(vbal,vmax,state)); 
+                cout <<"\na new checking subAccount " << this->subAccs.back()->getNum() <<" was created!\n"; break;
             }
             case 'm':{
-                cout << "enter name of account";
+                cout << "enter name of account ";
                 string acc;
                 cin >> acc;
                 this->modifySubAcc(acc); break;
             }
             case 'e':{
-                cout << "enter name of account";
+                cout << "enter name of account ";
                 string acc;
                 cin >> acc; 
                 this->deleteSubAcc(acc);
+                break;
             }   
             case 'd':{
                 this->detailDisplay();
+                break;
             }
             case 'b':{
                 int sum =0;
                 for(auto i : this->subAccs){sum +=i->getBalance();}
-                cout <<"aggregated balance of " << this->uniqueNum << "with " <<this->subAccs.size() <<" subaccounts is " << sum << endl;
+                cout <<"\naggregated balance of " << this->uniqueNum << " with " <<this->subAccs.size() <<" subaccounts is " << sum << endl;
+                break;
             }
             default:{
-                cout <<"enter one of the options bruh";
+                cout <<"enter one of the options bruh\n";
             }
         }
     }
